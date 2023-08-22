@@ -1,12 +1,17 @@
 Package: GIMiCC
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Performs Cellular Deconovlution of Glioma DNA Methylation Microarry Data
+Version: 1.0.0
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Steven", "Pike", ,"steven.c.pike.gr@dartmouth.edu", 
+    role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6990-6861"))
+Description: Given DNA methylation microarray data as an input, this function 
+    will estimate the relative composition of the sample. At the highest 
+    resolution, this will include 18 cell-types. Users may also specify lower 
+    resolution estimates as well to observe trends in broader cell populations.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+Depends: 
+    R (>= 2.10)
+LazyData: true
