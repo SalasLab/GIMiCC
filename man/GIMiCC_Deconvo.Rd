@@ -4,7 +4,7 @@
 \alias{GIMiCC_Deconvo}
 \title{Function to perform GIMiCC hierarchical deconvolution}
 \usage{
-GIMiCC_Deconvo(Betas, h = 2, tumor.type)
+GIMiCC_Deconvo(Betas, h = 5, tumor.type = "")
 }
 \arguments{
 \item{Betas}{A matrix (CpG as rows, samples as columns) of DNA methylation

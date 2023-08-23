@@ -22,15 +22,21 @@
 #'
 #' @examples
 #' hello tempory space here
-GIMiCC_Deconvo <- function(Betas, h=2, tumor.type){
+GIMiCC_Deconvo <- function(Betas, h=5, tumor.type=""){
+  
+  ## Loading the correct libraries
+  data_env <- new.env(parent = emptyenv())
   if (tumor.type == "IDH"){
     message("Loading libraries for Glioma_IDH Tumor Deconvolution")
-    load("/dartfs/rc/lab/S/SalasLab/Glioma_UCSF/Processed_data/April2023_Analysis/library_construction/IDH/method11_IDH_Libraries.RDATA")
+    data("IDH_libraries", envir = data_env, package = "GIMiCC")
+    IDH_libraries<-data_env[["IDH_libraries"]]
   } else if (tumor.type == "GBM"){
     message("Loading libraries for Glioblastoma Tumor Deconvolution")
-    load("/dartfs/rc/lab/S/SalasLab/Glioma_UCSF/Processed_data/April2023_Analysis/library_construction/GBM/method11_GBM_Libraries.RDATA")
+    data("GBM_libraries", envir = data_env, package = "GIMiCC")
+    GBM_libraries<-data_env[["GBM_libraries"]]
   } else {message("Invalid tumor type")}
   
+  ## calculating tumor purity
   tumor.sample <- colnames(Beta)
   tumor_beta_iDMC<-Beta[rownames(Beta)%in%rownames(Library_Layer0),]
   idmc.dat<-Library_Layer0[rownames(tumor_beta_iDMC),]
