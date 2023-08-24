@@ -7,32 +7,36 @@
 GIMiCC_Deconvo(Betas, h = 5, tumor.type = "")
 }
 \arguments{
-\item{Betas}{A matrix (CpG as rows, samples as columns) of DNA methylation
-data presented as \beta values. 450k, EPIC and EPICv2 platforms are
-accepted.}
+\item{Betas}{A matrix (CpG as rows, samples as columns) of DNA methylation data
+presented as \beta values. 450k, EPIC and EPICv2 platforms are accepted.}
 
-\item{h}{The hierarchical level of resolution desired. Parameter must equal
-one of the following {0,1,2,3,4,5}. The larger the number, the higher
-the resolution where level 0 provides estimates for only "Tumor" and
-"Non-Tumor" fractions whereas level 5 provides estimates for all 18
-cell types.}
+\item{h}{The hierarchical level of resolution desired. Parameter must equal one of
+the following {0,1,2,3,4,5}. The larger the number, the higher the
+resolution where level 0 provides estimates for only "Tumor" and "Non-Tumor"
+fractions whereas level 5 provides estimates for all 18 cell types.}
 
-\item{tumor.type}{Must be one of the following {"IDH" or "GBM"}. IDH should
-be used for isocitrate dehydrogenase (IDH) mutant astrocytoma and
-oligodendroglioma samples. GBM should be used for IDH wild-type
-glioblastoma samples}
+\item{tumor.type}{Must be one of the following {"IDH" or "GBM"}. IDH should be used
+for isocitrate dehydrogenase (IDH) mutant astrocytoma and oligodendroglioma
+samples. GBM should be used for IDH wild-type glioblastoma samples}
 }
 \value{
-A dataframe of cellular composition estimates per sample, scaled to
-sum of 100\%.
+A dataframe of cellular composition estimates per sample, scaled to sum of
+100\%.
 }
 \description{
-Given DNA methylation microarray data as an input, this
-function will estimate the relative composition of the sample. At the
-highest resolution, this will include 18 cell-types. Users may also
-specify lower resolution estimates as well to observe trends in broader
-cell populations.
+Given DNA methylation microarray data as an input, this function will
+estimate the relative composition of the sample. At the highest resolution,
+this will include 18 cell-types. Users may also specify lower resolution
+estimates as well to observe trends in broader cell populations.
 }
 \examples{
-hello tempory space here
+## Grabbing data
+data_env <- new.env(parent = emptyenv())
+data("Capper_test_betas", envir = data_env, package = "GIMiCC")
+Capper_test_betas <- data_env[["Capper_test_betas"]]
+
+## Using GIMiCC
+GIMiCC_results <- GIMiCC_Deconvo(Capper_test_betas, tumor.type = "GBM")
+head(GIMiCC_results)
+
 }
