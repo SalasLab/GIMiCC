@@ -8,7 +8,7 @@ GIMiCC_Deconvo(Betas, h = 5, tumor.type = "")
 }
 \arguments{
 \item{Betas}{A matrix (CpG as rows, samples as columns) of DNA methylation data
-presented as \beta values. 450k, EPIC and EPICv2 platforms are accepted.}
+presented as beta values. 450k, EPIC and EPICv2 platforms are accepted.}
 
 \item{h}{The hierarchical level of resolution desired. Parameter must equal one of
 the following {0,1,2,3,4,5}. The larger the number, the higher the
