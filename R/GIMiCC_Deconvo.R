@@ -9,7 +9,7 @@
 #' 
 #' @param 
 #' Betas A matrix (CpG as rows, samples as columns) of DNA methylation data 
-#' presented as \beta values. 450k, EPIC and EPICv2 platforms are accepted.  
+#' presented as beta values. 450k, EPIC and EPICv2 platforms are accepted.  
 #' 
 #' @param 
 #' h The hierarchical level of resolution desired. Parameter must equal one of
