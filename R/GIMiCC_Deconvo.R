@@ -43,14 +43,22 @@
 #' @export
 
 GIMiCC_Deconvo <- function(Betas, h = 5, tumor.type = "") {
+  ## testing if input is correct
+  if (sum(Betas < 0, na.rm = TRUE) > 0) {
+    warning("Negative values detected - please use Betas as input")
+  }
+  if (sum(Betas > 1, na.rm = TRUE) > 0) {
+    warning("Values greater than one detected - please use Betas as input")
+  }
+  
   ## Loading the correct libraries
   data_env <- new.env(parent = emptyenv())
   if (tumor.type == "IDH") {
-    message("Loading libraries for Glioma_IDH Tumor Deconvolution")
+    message("\nLoading libraries for Glioma_IDH Tumor Deconvolution")
     data("IDH_libraries", envir = data_env, package = "GIMiCC")
     GIMiCC_libraries <- data_env[["IDH_libraries"]]
   } else if (tumor.type == "GBM") {
-    message("Loading libraries for Glioblastoma Tumor Deconvolution")
+    message("\nLoading libraries for Glioblastoma Tumor Deconvolution")
     data("GBM_libraries", envir = data_env, package = "GIMiCC")
     GIMiCC_libraries <- data_env[["GBM_libraries"]]
   } else {
