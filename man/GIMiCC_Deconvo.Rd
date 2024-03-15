@@ -15,9 +15,10 @@ the following {0,1,2,3,4,5}. The larger the number, the higher the
 resolution where level 0 provides estimates for only "Tumor" and "Non-Tumor"
 fractions whereas level 5 provides estimates for all 18 cell types.}
 
-\item{tumor.type}{Must be one of the following {"IDH" or "GBM"}. IDH should be used
-for isocitrate dehydrogenase (IDH) mutant astrocytoma and oligodendroglioma
-samples. GBM should be used for IDH wild-type glioblastoma samples}
+\item{tumor.type}{Must be one of the following {"AST-HG","AST-LG","GBM","OLG"} as
+defined by the Capper et al molecular classifier. AST-HG is for high-grade
+astrocytoma, AST-LG is for low-grade astrocytoma, GBM is for glioblastoma,
+and OLG is for oligodendroglioma.}
 }
 \value{
 A dataframe of cellular composition estimates per sample, scaled to sum of
@@ -31,12 +32,11 @@ estimates as well to observe trends in broader cell populations.
 }
 \examples{
 ## Grabbing data
-data_env <- new.env(parent = emptyenv())
-data("Capper_test_betas", envir = data_env, package = "GIMiCC")
-Capper_test_betas <- data_env[["Capper_test_betas"]]
+library(ExperimentHub)
+Example_Beta<-query(ExperimentHub(), "GIMiCC")[["EH????????????"]]
 
 ## Using GIMiCC
-GIMiCC_results <- GIMiCC_Deconvo(Capper_test_betas, tumor.type = "GBM")
+GIMiCC_results <- GIMiCC_Deconvo(Example_Beta, tumor.type = "GBM")
 head(GIMiCC_results)
 
 }

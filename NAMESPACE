@@ -3,4 +3,5 @@
 export(GIMiCC_Deconvo)
 import(InfiniumPurify)
 import(dplyr)
+import(minfi)
 importFrom(FlowSorted.Blood.EPIC,projectCellType_CP)

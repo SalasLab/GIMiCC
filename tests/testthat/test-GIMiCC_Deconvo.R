@@ -19,5 +19,5 @@ test_that("Not using beta values", {
   data("Capper_test_betas", envir = data_env, package = "GIMiCC")
   Capper_test_betas <- data_env[["Capper_test_betas"]]
   Capper_test_mvals <- minfi::logit2(Capper_test_betas)
-  expect_warning(GIMiCC_Deconvo(Capper_test_mvals, tumor.type = "GBM", h = 5))
+  expect_error(GIMiCC_Deconvo(Capper_test_mvals, tumor.type = "GBM", h = 5))
 })
