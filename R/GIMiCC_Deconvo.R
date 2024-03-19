@@ -42,6 +42,7 @@
 #' head(GIMiCC_results)
 #'
 #' @export
+#' 
 
 GIMiCC_Deconvo <- function(Betas, h = 5, tumor.type = "") {
   ## testing if input is correct
