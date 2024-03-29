@@ -15,7 +15,18 @@ RoxygenNote: 7.2.3
 Depends: 
     R (>= 2.10)
 LazyData: true
+biocViews: 
+    ExperimentHub,
+    ExperimentData, 
+    Homo_sapiens_Data, 
+    Tissue, 
+    MicroarrayData, 
+    Genome, 
+    MethylationArrayData, 
+    PackageTypeData,
+    CancerData
 Imports: 
+    biocViews (>= 1.68.2),
     dplyr (>= 1.1.2),
     ExperimentHub (>= 2.8.1),
     FlowSorted.Blood.EPIC (>= 2.4.2),
