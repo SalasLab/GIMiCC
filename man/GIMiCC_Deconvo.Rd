@@ -33,7 +33,7 @@ estimates as well to observe trends in broader cell populations.
 \examples{
 ## Grabbing data
 library(ExperimentHub)
-Example_Beta<-query(ExperimentHub(), "GIMiCC")[["EH????????????"]]
+Example_Beta<-query(ExperimentHub(), "GIMiCC")[["EH9482"]]
 
 ## Using GIMiCC
 GIMiCC_results <- GIMiCC_Deconvo(Example_Beta, tumor.type = "GBM")

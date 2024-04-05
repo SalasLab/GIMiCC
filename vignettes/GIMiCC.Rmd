@@ -16,13 +16,19 @@ knitr::opts_chunk$set(
 )
 ```
 
+
 **Loading package:**  
+
+
 ```{r eval=TRUE}
-# library(GIMiCC)
+library(GIMiCC)
 ```
+
+
 The GIMiCC package contains reference libraries derived from 
 Illumina HumanMethylation450K DNA methylation 
 microarrays.
+
 
 The reference libraries were used to estimate proportions of 18 cell types 
 (tumor, endothelial, stromal, astrocyte, oligodendrocyte, microglia, 
@@ -32,9 +38,12 @@ and natural killer cells) for 4 molecular subtypes of glioma using a modified
 version of the algorithm constrained projection/quadratic programming described 
 in Houseman et al. 2012. 
 
+
 **Objects included:**  
 
-*GIMiCC_deconvolution function for tumor microenvironment deconvolution:* 
+
+*GIMiCC_deconvo function for tumor microenvironment deconvolution:* 
+ 
  
  We offer the function GIMiCC_deconvolution to estimate proportions for 18 
  cell types (tumor, endothelial, stromal, astrocyte, oligodendrocyte, microglia, 
@@ -42,18 +51,19 @@ in Houseman et al. 2012.
  B memory, CD4T naïve, CD4T memory, CD8T naïve, CD8T memory, T regulatory, 
  and natural killer cells) for 4 molecular subtypes of glioma using a modified 
  version of the algorithm constrained projection/quadratic programming described 
- in Houseman et al. 2012. 
- *see ?HiTIMED_deconvolution for details*  
-```{r eval=FALSE}
+ in Houseman et al. 2012. *see ?GIMiCC_Deconvo for details*  
+ 
+ 
+```{r eval=TRUE}
 # Step 1: Load example data
 library(ExperimentHub)
-Example_Beta <- query(ExperimentHub(), "GIMiCC")[["EH??????????"]]
+Example_Beta<-query(ExperimentHub(), "GIMiCC")[["EH9482"]]
 
-
-# Step 2: Run HiTIMED and show results
+# Step 2: Run GIMiCC and show results
 GIMiCC_results <- GIMiCC_Deconvo(Example_Beta, tumor.type = "GBM", h = 5)
 head(GIMiCC_results)
 ```
+
 
 ```{r}
 sessionInfo()
@@ -61,8 +71,11 @@ sessionInfo()
 
 
 **References**
+
+
 Zhang Z, et al. (2023) Hierarchical deconvolution for extensive cell type resolution 
 in the human brain using DNA methylation. Front Neurosci. 2023 Jun 19;17:1198243. doi: [10.3389/fnins.2023.1198243](https://doi.org/10.3389%2Ffnins.2023.1198243).
+
 
 Z Zhang, LA Salas et al. (2023) HiTIMED: hierarchical tumor immune 
 microenvironment epigenetic deconvolution for accurate cell type resolution 

@@ -30,12 +30,13 @@
 #' @import InfiniumPurify
 #' @import dplyr
 #' @import minfi
+#' @import ExperimentHub
 #' @importFrom FlowSorted.Blood.EPIC projectCellType_CP
 #'
 #' @examples
 #' ## Grabbing data
 #' library(ExperimentHub)
-#' Example_Beta<-query(ExperimentHub(), "GIMiCC")[["EH????????????"]]
+#' Example_Beta<-query(ExperimentHub(), "GIMiCC")[["EH9482"]]
 #'
 #' ## Using GIMiCC
 #' GIMiCC_results <- GIMiCC_Deconvo(Example_Beta, tumor.type = "GBM")
@@ -54,35 +55,36 @@ GIMiCC_Deconvo <- function(Betas, h = 5, tumor.type = "") {
   }
 
   ## Loading the correct libraries
+  GIMiCC_Library<-query(ExperimentHub(), "GIMiCC")[["EH9483"]]
+
   if (tumor.type == "AST-LG") {
     message("\nLoading libraries for Low-Grade Astrocytoma Tumor Deconvolution")
-    GIMiCC_libraries <- data_env[["AST-LG_libraries"]]
+    Library_Layer0 <- GIMiCC_Library[["ASTLG_Library_Layer0"]]
   } else if (tumor.type == "AST-HG") {
     message("\nLoading libraries for High-Grade Astrocytoma Tumor Deconvolution")
-    GIMiCC_libraries <- data_env[["AST-HG_libraries"]]
+    Library_Layer0 <- GIMiCC_Library[["ASTHG_Library_Layer0"]]
   } else if (tumor.type == "GBM") {
     message("\nLoading libraries for Glioblastoma Tumor Deconvolution")
-    GIMiCC_libraries <- data_env[["GBM_libraries"]]
+    Library_Layer0 <- GIMiCC_Library[["GBM_Library_Layer0"]]
   } else if (tumor.type == "OLG") {
     message("\nLoading libraries for Oligodendroglioma Tumor Deconvolution")
-    GIMiCC_libraries <- data_env[["OLG_libraries"]]
+    Library_Layer0 <- GIMiCC_Library[["OLG_Library_Layer0"]]
   } else {
     stop("Invalid tumor type")
   }
 
-  Library_Layer0 <- GIMiCC_libraries[["Library_Layer0"]]
-  Library_Layer1 <- GIMiCC_libraries[["Library_Layer1"]]
-  Library_Layer2A <- GIMiCC_libraries[["Library_Layer2A"]]
-  Library_Layer2B <- GIMiCC_libraries[["Library_Layer2B"]]
-  Library_Layer2C <- GIMiCC_libraries[["Library_Layer2C"]]
-  Library_Layer2D <- GIMiCC_libraries[["Library_Layer2D"]]
-  Library_Layer3A <- GIMiCC_libraries[["Library_Layer3A"]]
-  Library_Layer3B <- GIMiCC_libraries[["Library_Layer3B"]]
-  Library_Layer4 <- GIMiCC_libraries[["Library_Layer4"]]
-  Library_Layer5A <- GIMiCC_libraries[["Library_Layer5A"]]
-  Library_Layer5B <- GIMiCC_libraries[["Library_Layer5B"]]
-  Library_Layer5C <- GIMiCC_libraries[["Library_Layer5C"]]
-  rm(GIMiCC_libraries)
+  Library_Layer1 <- GIMiCC_Library[["Library_Layer1"]]
+  Library_Layer2A <- GIMiCC_Library[["Library_Layer2A"]]
+  Library_Layer2B <- GIMiCC_Library[["Library_Layer2B"]]
+  Library_Layer2C <- GIMiCC_Library[["Library_Layer2C"]]
+  Library_Layer2D <- GIMiCC_Library[["Library_Layer2D"]]
+  Library_Layer3A <- GIMiCC_Library[["Library_Layer3A"]]
+  Library_Layer3B <- GIMiCC_Library[["Library_Layer3B"]]
+  Library_Layer4 <- GIMiCC_Library[["Library_Layer4"]]
+  Library_Layer5A <- GIMiCC_Library[["Library_Layer5A"]]
+  Library_Layer5B <- GIMiCC_Library[["Library_Layer5B"]]
+  Library_Layer5C <- GIMiCC_Library[["Library_Layer5C"]]
+  rm(GIMiCC_Library)
 
   ## calculating tumor purity
   tumor_sample <- colnames(Betas)
