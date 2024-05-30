@@ -1,6 +1,6 @@
 Package: GIMiCC
 Title: Performs Cellular Deconovlution of Glioma DNA Methylation Microarry Data
-Version: 0.99.0
+Version: 0.99.1
 Authors@R: 
     person("Steven", "Pike", ,"steven.c.pike.gr@dartmouth.edu", 
     role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6990-6861"))

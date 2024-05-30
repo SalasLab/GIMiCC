@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Steven C. Pike" />
+
+<meta name="date" content="2024-04-05" />
+
+<title>GIMiCC</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">GIMiCC</h1>
+<h4 class="author">Steven C. Pike</h4>
+<h4 class="date">2024-04-05</h4>
+
+
+
+<p><strong>Loading package:</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(GIMiCC)</span></code></pre></div>
+<p>The GIMiCC package contains reference libraries derived from Illumina
+HumanMethylation450K DNA methylation microarrays.</p>
+<p>The reference libraries were used to estimate proportions of 18 cell
+types (tumor, endothelial, stromal, astrocyte, oligodendrocyte,
+microglia, GABAergic neurons,glutamatergic neurons, neutrophil,
+monocyte, B naïve, B memory, CD4T naïve, CD4T memory, CD8T naïve, CD8T
+memory, T regulatory, and natural killer cells) for 4 molecular subtypes
+of glioma using a modified version of the algorithm constrained
+projection/quadratic programming described in Houseman et al. 2012.</p>
+<p><strong>Objects included:</strong></p>
+<p><em>GIMiCC_deconvo function for tumor microenvironment
+deconvolution:</em></p>
+<p>We offer the function GIMiCC_deconvolution to estimate proportions
+for 18 cell types (tumor, endothelial, stromal, astrocyte,
+oligodendrocyte, microglia, GABAergic neurons,glutamatergic neurons,
+neutrophil, monocyte, B naïve, B memory, CD4T naïve, CD4T memory, CD8T
+naïve, CD8T memory, T regulatory, and natural killer cells) for 4
+molecular subtypes of glioma using a modified version of the algorithm
+constrained projection/quadratic programming described in Houseman et
+al. 2012. <em>see ?GIMiCC_Deconvo for details</em></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Step 1: Load example data</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">library</span>(ExperimentHub)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>Example_Beta<span class="ot">&lt;-</span><span class="fu">query</span>(<span class="fu">ExperimentHub</span>(), <span class="st">&quot;GIMiCC&quot;</span>)[[<span class="st">&quot;EH9482&quot;</span>]]</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co"># Step 2: Run HiTIMED and show results</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>GIMiCC_results <span class="ot">&lt;-</span> <span class="fu">GIMiCC_Deconvo</span>(Example_Beta, <span class="at">tumor.type =</span> <span class="st">&quot;GBM&quot;</span>, <span class="at">h =</span> <span class="dv">5</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="fu">head</span>(GIMiCC_results)</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt;                                 Tumor CD4nv     CD4mem      Treg CD8nv CD8mem</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; GSM2403088_6229017103_R06C01 90.34542     0 0.00000000 0.1280402     0      0</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; GSM2403089_6229017111_R01C02 87.56596     0 0.00000000 0.0000000     0      0</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; GSM2403095_6229017120_R05C01 83.02325     0 0.01057054 0.3112436     0      0</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt;                              Bnv      Bmem        NK      Mono Neu Endothelial</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; GSM2403088_6229017103_R06C01   0 0.0000000 0.0978769 0.0000000   0   0.9889339</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; GSM2403089_6229017111_R01C02   0 0.0000000 0.0000000 0.0000000   0   0.7171484</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; GSM2403095_6229017120_R05C01   0 0.4328627 0.1189806 0.2519012   0   0.6361457</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt;                               Stromal Astrocyte Microglia Oligodendrocyte</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; GSM2403088_6229017103_R06C01 1.477811 0.7714117 0.2007670        5.394050</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; GSM2403089_6229017111_R01C02 1.668705 1.5750044 0.4305227        6.696184</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; GSM2403095_6229017120_R05C01 2.535112 1.9414785 0.9319097        7.652199</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt;                                   GABA       GLU</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; GSM2403088_6229017103_R06C01 0.2076999 0.3879876</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt; GSM2403089_6229017111_R01C02 0.3161555 0.8077690</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt; GSM2403095_6229017120_R05C01 0.7951156 1.3592344</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; R Under development (unstable) (2024-04-04 r86334 ucrt)</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; Platform: x86_64-w64-mingw32/x64</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; Running under: Windows 10 x64 (build 19045)</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; locale:</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; [1] LC_COLLATE=English_United States.utf8 </span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; [2] LC_CTYPE=English_United States.utf8   </span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; [3] LC_MONETARY=English_United States.utf8</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; [4] LC_NUMERIC=C                          </span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; [5] LC_TIME=English_United States.utf8    </span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; time zone: America/New_York</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; tzcode source: internal</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; attached base packages:</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; [1] ExperimentHub_2.11.1 AnnotationHub_3.11.3 BiocFileCache_2.11.2</span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; [4] dbplyr_2.5.0         BiocGenerics_0.49.1  GIMiCC_0.99.0       </span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#&gt;   [1] RColorBrewer_1.1-3          rstudioapi_0.16.0          </span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co">#&gt;   [3] jsonlite_1.8.8              magrittr_2.0.3             </span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt;   [5] GenomicFeatures_1.55.4      rmarkdown_2.26             </span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt;   [7] BiocIO_1.13.0               zlibbioc_1.49.3            </span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt;   [9] vctrs_0.6.5                 multtest_2.59.0            </span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co">#&gt;  [11] memoise_2.0.1               Rsamtools_2.19.4           </span></span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co">#&gt;  [13] DelayedMatrixStats_1.25.1   RCurl_1.98-1.14            </span></span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co">#&gt;  [15] askpass_1.2.0               htmltools_0.5.8.1          </span></span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a><span class="co">#&gt;  [17] S4Arrays_1.3.6              curl_5.2.1                 </span></span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a><span class="co">#&gt;  [19] Rhdf5lib_1.25.1             SparseArray_1.3.4          </span></span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a><span class="co">#&gt;  [21] rhdf5_2.47.6                sass_0.4.9                 </span></span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a><span class="co">#&gt;  [23] InfiniumPurify_1.3.1        nor1mix_1.3-2              </span></span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a><span class="co">#&gt;  [25] bslib_0.7.0                 plyr_1.8.9                 </span></span>
+<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a><span class="co">#&gt;  [27] cachem_1.0.8                GenomicAlignments_1.39.5   </span></span>
+<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a><span class="co">#&gt;  [29] mime_0.12                   lifecycle_1.0.4            </span></span>
+<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a><span class="co">#&gt;  [31] iterators_1.0.14            pkgconfig_2.0.3            </span></span>
+<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a><span class="co">#&gt;  [33] Matrix_1.7-0                R6_2.5.1                   </span></span>
+<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a><span class="co">#&gt;  [35] fastmap_1.1.1               GenomeInfoDbData_1.2.12    </span></span>
+<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a><span class="co">#&gt;  [37] MatrixGenerics_1.15.0       digest_0.6.35              </span></span>
+<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a><span class="co">#&gt;  [39] siggenes_1.77.0             reshape_0.8.9              </span></span>
+<span id="cb3-47"><a href="#cb3-47" tabindex="-1"></a><span class="co">#&gt;  [41] AnnotationDbi_1.65.2        S4Vectors_0.41.5           </span></span>
+<span id="cb3-48"><a href="#cb3-48" tabindex="-1"></a><span class="co">#&gt;  [43] GenomicRanges_1.55.4        RSQLite_2.3.6              </span></span>
+<span id="cb3-49"><a href="#cb3-49" tabindex="-1"></a><span class="co">#&gt;  [45] base64_2.0.1                filelock_1.0.3             </span></span>
+<span id="cb3-50"><a href="#cb3-50" tabindex="-1"></a><span class="co">#&gt;  [47] fansi_1.0.6                 httr_1.4.7                 </span></span>
+<span id="cb3-51"><a href="#cb3-51" tabindex="-1"></a><span class="co">#&gt;  [49] abind_1.4-5                 compiler_4.5.0             </span></span>
+<span id="cb3-52"><a href="#cb3-52" tabindex="-1"></a><span class="co">#&gt;  [51] beanplot_1.3.1              rngtools_1.5.2             </span></span>
+<span id="cb3-53"><a href="#cb3-53" tabindex="-1"></a><span class="co">#&gt;  [53] withr_3.0.0                 bit64_4.0.5                </span></span>
+<span id="cb3-54"><a href="#cb3-54" tabindex="-1"></a><span class="co">#&gt;  [55] BiocParallel_1.37.1         DBI_1.2.2                  </span></span>
+<span id="cb3-55"><a href="#cb3-55" tabindex="-1"></a><span class="co">#&gt;  [57] HDF5Array_1.31.6            MASS_7.3-60.2              </span></span>
+<span id="cb3-56"><a href="#cb3-56" tabindex="-1"></a><span class="co">#&gt;  [59] openssl_2.1.1               rappdirs_0.3.3             </span></span>
+<span id="cb3-57"><a href="#cb3-57" tabindex="-1"></a><span class="co">#&gt;  [61] DelayedArray_0.29.9         rjson_0.2.21               </span></span>
+<span id="cb3-58"><a href="#cb3-58" tabindex="-1"></a><span class="co">#&gt;  [63] tools_4.5.0                 glue_1.7.0                 </span></span>
+<span id="cb3-59"><a href="#cb3-59" tabindex="-1"></a><span class="co">#&gt;  [65] quadprog_1.5-8              restfulr_0.0.15            </span></span>
+<span id="cb3-60"><a href="#cb3-60" tabindex="-1"></a><span class="co">#&gt;  [67] nlme_3.1-164                rhdf5filters_1.15.4        </span></span>
+<span id="cb3-61"><a href="#cb3-61" tabindex="-1"></a><span class="co">#&gt;  [69] grid_4.5.0                  generics_0.1.3             </span></span>
+<span id="cb3-62"><a href="#cb3-62" tabindex="-1"></a><span class="co">#&gt;  [71] tzdb_0.4.0                  preprocessCore_1.65.0      </span></span>
+<span id="cb3-63"><a href="#cb3-63" tabindex="-1"></a><span class="co">#&gt;  [73] tidyr_1.3.1                 data.table_1.15.4          </span></span>
+<span id="cb3-64"><a href="#cb3-64" tabindex="-1"></a><span class="co">#&gt;  [75] hms_1.1.3                   xml2_1.3.6                 </span></span>
+<span id="cb3-65"><a href="#cb3-65" tabindex="-1"></a><span class="co">#&gt;  [77] utf8_1.2.4                  XVector_0.43.1             </span></span>
+<span id="cb3-66"><a href="#cb3-66" tabindex="-1"></a><span class="co">#&gt;  [79] BiocVersion_3.19.1          foreach_1.5.2              </span></span>
+<span id="cb3-67"><a href="#cb3-67" tabindex="-1"></a><span class="co">#&gt;  [81] pillar_1.9.0                limma_3.59.6               </span></span>
+<span id="cb3-68"><a href="#cb3-68" tabindex="-1"></a><span class="co">#&gt;  [83] genefilter_1.85.1           splines_4.5.0              </span></span>
+<span id="cb3-69"><a href="#cb3-69" tabindex="-1"></a><span class="co">#&gt;  [85] dplyr_1.1.4                 FlowSorted.Blood.EPIC_2.7.0</span></span>
+<span id="cb3-70"><a href="#cb3-70" tabindex="-1"></a><span class="co">#&gt;  [87] lattice_0.22-6              survival_3.5-8             </span></span>
+<span id="cb3-71"><a href="#cb3-71" tabindex="-1"></a><span class="co">#&gt;  [89] rtracklayer_1.62.0          bit_4.0.5                  </span></span>
+<span id="cb3-72"><a href="#cb3-72" tabindex="-1"></a><span class="co">#&gt;  [91] GEOquery_2.71.0             annotate_1.81.2            </span></span>
+<span id="cb3-73"><a href="#cb3-73" tabindex="-1"></a><span class="co">#&gt;  [93] tidyselect_1.2.1            locfit_1.5-9.9             </span></span>
+<span id="cb3-74"><a href="#cb3-74" tabindex="-1"></a><span class="co">#&gt;  [95] Biostrings_2.71.5           knitr_1.45                 </span></span>
+<span id="cb3-75"><a href="#cb3-75" tabindex="-1"></a><span class="co">#&gt;  [97] IRanges_2.37.1              SummarizedExperiment_1.33.3</span></span>
+<span id="cb3-76"><a href="#cb3-76" tabindex="-1"></a><span class="co">#&gt;  [99] stats4_4.5.0                xfun_0.43                  </span></span>
+<span id="cb3-77"><a href="#cb3-77" tabindex="-1"></a><span class="co">#&gt; [101] Biobase_2.63.1              scrime_1.3.5               </span></span>
+<span id="cb3-78"><a href="#cb3-78" tabindex="-1"></a><span class="co">#&gt; [103] statmod_1.5.0               matrixStats_1.2.0          </span></span>
+<span id="cb3-79"><a href="#cb3-79" tabindex="-1"></a><span class="co">#&gt; [105] yaml_2.3.8                  evaluate_0.23              </span></span>
+<span id="cb3-80"><a href="#cb3-80" tabindex="-1"></a><span class="co">#&gt; [107] codetools_0.2-20            tibble_3.2.1               </span></span>
+<span id="cb3-81"><a href="#cb3-81" tabindex="-1"></a><span class="co">#&gt; [109] minfi_1.49.1                BiocManager_1.30.22        </span></span>
+<span id="cb3-82"><a href="#cb3-82" tabindex="-1"></a><span class="co">#&gt; [111] cli_3.6.2                   bumphunter_1.45.1          </span></span>
+<span id="cb3-83"><a href="#cb3-83" tabindex="-1"></a><span class="co">#&gt; [113] xtable_1.8-4                jquerylib_0.1.4            </span></span>
+<span id="cb3-84"><a href="#cb3-84" tabindex="-1"></a><span class="co">#&gt; [115] Rcpp_1.0.12                 GenomeInfoDb_1.39.11       </span></span>
+<span id="cb3-85"><a href="#cb3-85" tabindex="-1"></a><span class="co">#&gt; [117] png_0.1-8                   XML_3.99-0.16.1            </span></span>
+<span id="cb3-86"><a href="#cb3-86" tabindex="-1"></a><span class="co">#&gt; [119] parallel_4.5.0              readr_2.1.5                </span></span>
+<span id="cb3-87"><a href="#cb3-87" tabindex="-1"></a><span class="co">#&gt; [121] blob_1.2.4                  mclust_6.1                 </span></span>
+<span id="cb3-88"><a href="#cb3-88" tabindex="-1"></a><span class="co">#&gt; [123] doRNG_1.8.6                 sparseMatrixStats_1.15.0   </span></span>
+<span id="cb3-89"><a href="#cb3-89" tabindex="-1"></a><span class="co">#&gt; [125] bitops_1.0-7                illuminaio_0.45.0          </span></span>
+<span id="cb3-90"><a href="#cb3-90" tabindex="-1"></a><span class="co">#&gt; [127] purrr_1.0.2                 crayon_1.5.2               </span></span>
+<span id="cb3-91"><a href="#cb3-91" tabindex="-1"></a><span class="co">#&gt; [129] rlang_1.1.3                 KEGGREST_1.43.0</span></span></code></pre></div>
+<p><strong>References</strong> Zhang Z, et al. (2023) Hierarchical
+deconvolution for extensive cell type resolution in the human brain
+using DNA methylation. Front Neurosci. 2023 Jun 19;17:1198243. doi: <a href="https://doi.org/10.3389%2Ffnins.2023.1198243">10.3389/fnins.2023.1198243</a>.</p>
+<p>Z Zhang, LA Salas et al. (2023) HiTIMED: hierarchical tumor immune
+microenvironment epigenetic deconvolution for accurate cell type
+resolution in the tumor microenvironment using tumor-type-specific DNA
+methylation data. Journal of Tranlsational Medicine, 8;20(1):516. doi:
+<a href="https://dx.doi.org/10.1186/s12967-022-03736-6">10.1186/s12967-022-03736-6</a>.</p>
+<p>X Zheng et al. (2017). Estimating and accounting for tumor purity in
+the analysis of DNA methylation data from cancer studies. Genome Biol.
+2017;18(1):17. doi: <a href="https://doi.org/10.1186/s13059-016-1143-5">10.1186/s13059-016-1143-5</a>.</p>
+<p>LA Salas et al. (2018). An optimized library for reference-based
+deconvolution of whole-blood biospecimens assayed using the Illumina
+HumanMethylationEPIC BeadArray. Genome Biology 19, 64. doi: <a href="https://dx.doi.org/10.1186/s13059-018-1448-7">10.1186/s13059-018-1448-7</a>.</p>
+<p>DC Koestler et al. (2016). Improving cell mixture deconvolution by
+identifying optimal DNA methylation libraries (IDOL)}. BMC
+bioinformatics. doi: <a href="https://dx.doi.org/10.1186/s12859-016-0943-7">10.1186/s12859-016-0943-7</a></p>
+<p>LA Salas et al. (2022). Enhanced cell deconvolution of peripheral
+blood using DNA methylation for high-resolution immune profiling. Nature
+Communications 13(1):761. <a href="doi:%5B10.1038/s41467-021-27864-7" class="uri">doi:[10.1038/s41467-021-27864-7</a>](<a href="https://dx.doi.org/10.1038/s41467-021-27864-7" class="uri">https://dx.doi.org/10.1038/s41467-021-27864-7</a>).</p>
+<p>EA Houseman et al. (2012) DNA methylation arrays as surrogate
+measures of cell mixture distribution. BMC Bioinformatics 13, 86. doi:
+<a href="https://dx.doi.org/10.1186/1471-2105-13-86">10.1186/1471-2105-13-86</a>.</p>
+<p>J. Guintivano, et al. (2013). A cell epigenotype specific model for
+the correction of brain cellular heterogeneity bias and its application
+to age, brain region and major depression. Epigenetics, 8(3):290–302,
+2013. doi: <a href="https://dx.doi.org/10.4161/epi.23924">10.4161/epi.23924</a>.</p>
+<p>Weightman Potter PG, et al. (2021) Attenuated Induction of the
+Unfolded Protein Response in Adult Human Primary Astrocytes in Response
+to Recurrent Low Glucose. Front Endocrinol (Lausanne) 2021;12:671724.
+doi: <a href="https://dx.doi.org/10.3389/fendo.2021.671724">10.3389/fendo.2021.671724</a>.</p>
+<p>Kozlenkov, et al. (2018) A unique role for DNA (hydroxy)methylation
+in epigenetic regulation of human inhibitory neurons. Sci. Adv.
+2018;4:eaau6190. doi: <a href="https://dx.doi.org/10.1126/sciadv.aau6190">10.1126/sciadv.aau6190</a>.</p>
+<p>de Whitte, et al. (2022) Contribution of Age, Brain Region, Mood
+Disorder Pathology, and Interindividual Factors on the Methylome of
+Human Microglia. Biological Psychiatry March 15, 2022; 91:572–581. doi:
+<a href="https://doi.org/10.1016/j.biopsych.2021.10.020">10.1016/j.biopsych.2021.10.020</a>.</p>
+<p>X Lin, et al. (2018) Cell type-specific DNA methylation in neonatal
+cord tissue and cord blood: A 850K-reference panel and comparison of
+cell-types. Epigenetics. 13:941–58. doi: <a href="https://dx.doi.org/10.1080/15592294.2018.1522929">10.1080/15592294.2018.1522929</a>.</p>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

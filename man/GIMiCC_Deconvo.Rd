@@ -15,9 +15,9 @@ the following {0,1,2,3,4,5}. The larger the number, the higher the
 resolution where level 0 provides estimates for only "Tumor" and "Non-Tumor"
 fractions whereas level 5 provides estimates for all 18 cell types.}
 
-\item{tumor.type}{Must be one of the following {"AST-HG","AST-LG","GBM","OLG"} as
+\item{tumor.type}{Must be one of the following {"AST-HG","AST","GBM","OLG"} as
 defined by the Capper et al molecular classifier. AST-HG is for high-grade
-astrocytoma, AST-LG is for low-grade astrocytoma, GBM is for glioblastoma,
+astrocytoma, AST is for astrocytoma, GBM is for glioblastoma,
 and OLG is for oligodendroglioma.}
 }
 \value{

@@ -18,9 +18,9 @@
 #' fractions whereas level 5 provides estimates for all 18 cell types.
 #'
 #' @param
-#' tumor.type Must be one of the following {"AST-HG","AST-LG","GBM","OLG"} as
+#' tumor.type Must be one of the following {"AST-HG","AST","GBM","OLG"} as
 #' defined by the Capper et al molecular classifier. AST-HG is for high-grade 
-#' astrocytoma, AST-LG is for low-grade astrocytoma, GBM is for glioblastoma,
+#' astrocytoma, AST is for astrocytoma, GBM is for glioblastoma,
 #' and OLG is for oligodendroglioma.
 #' 
 #' @return
@@ -57,8 +57,8 @@ GIMiCC_Deconvo <- function(Betas, h = 5, tumor.type = "") {
   ## Loading the correct libraries
   GIMiCC_Library<-query(ExperimentHub(), "GIMiCC")[["EH9483"]]
 
-  if (tumor.type == "AST-LG") {
-    message("\nLoading libraries for Low-Grade Astrocytoma Tumor Deconvolution")
+  if (tumor.type == "AST") {
+    message("\nLoading libraries for Astrocytoma Tumor Deconvolution")
     Library_Layer0 <- GIMiCC_Library[["ASTLG_Library_Layer0"]]
   } else if (tumor.type == "AST-HG") {
     message("\nLoading libraries for High-Grade Astrocytoma Tumor Deconvolution")
@@ -492,7 +492,7 @@ GIMiCC_Deconvo <- function(Betas, h = 5, tumor.type = "") {
   proj_low <- proj %>% filter(Sum < 1)
   ID_low <- rownames(proj_low)
   proj <- proj[, !colnames(proj) == "Sum"]
-  proj[ID_low, ] <- h2C_proj[ID_low, ]
+  proj[ID_low, ] <- h5C_proj[ID_low, ]
 
   proj$NonTumor <- h0_proj$NonTumor
   proj$Neuronal <- h1_proj$Neuronal
